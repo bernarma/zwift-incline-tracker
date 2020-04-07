@@ -52,3 +52,7 @@ sudo npm start
 ## Hints
 
 1. On startup the software tries to find Zwifit in your local network. If it is running but could not be found then retry starting.
+
+The last command will guide you through configuring your treadmill. It will save your answers, and
+won't ask you in the future. Your answers are saved in the settings.conf file. To change them, simply
+edit settings.conf (or delete it and run `npm start` again).
