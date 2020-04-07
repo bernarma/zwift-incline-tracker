@@ -6,7 +6,7 @@ const net = require('net');
 const settings = require('./settings');
 const Socket = net.Socket;
 
-let debug = false;
+let debug = true;
 let prevDistance = 0;
 let prevAltitude = 0;
 let prevSlope = 0;
@@ -16,14 +16,17 @@ function simpleMovingAverager(period) {
     var nums = [];
     return function(num) {
         nums.push(num);
-        if (nums.length > period)
+        if (nums.length > period) {
             nums.splice(0,1);  // remove the first element of the array
+        }
         var sum = 0;
-        for (var i in nums)
+        for (var i in nums) {
             sum += nums[i];
+        }
         var n = period;
         if (nums.length < period)
             n = nums.length;
+
         return(sum/n);
     }
 }
@@ -37,12 +40,6 @@ function clamp(value, min, max) {
 function roundToPrecision(x, precision) {
     var y = +x + (precision === undefined ? 0.5 : precision/2);
     return y - (y % (precision === undefined ? 1 : +precision));
-}
-
-Array.prototype.asyncFilter = async function(f) {
-	const array = this;
-	const booleans = await Promise.all(array.map(f));
-	return array.filter((x, i) => booleans[i]);
 }
 
 async function run() {
@@ -66,7 +63,7 @@ async function run() {
 		console.log('Found Zwifit at ', clients.map(client => client.io.uri));
 	}
 
-	console.log(`Tracking Zwift at ${myIP}...`);
+    console.log(`Tracking Zwift at ${myIP}...`);
 
     const monitor = new ZwiftPacketMonitor(myIP);
 	monitor.on('outgoingPlayerState', (playerState, serverWorldTime) => {
@@ -80,7 +77,7 @@ async function run() {
             const slope_pc = sma(slp_pc);
             
             if (debug) {
-                console.log('Simulating ' + slp_pc + '% incline pckt ' + numberOfRuns)
+                console.log('Simulating (' + slp_pc + '%) SMA: ' + slope_pc + '% incline (previous: ' + prevSlope + ') pckt ' + numberOfRuns)
             }
     
             if (Math.abs(slope_pc - prevSlope) > 0.9) {
