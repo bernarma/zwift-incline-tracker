@@ -6,7 +6,7 @@ const net = require('net');
 const settings = require('./settings');
 const Socket = net.Socket;
 
-let debug = true;
+let debug = false;
 let prevDistance = 0;
 let prevAltitude = 0;
 let prevSlope = 0;
